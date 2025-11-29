@@ -1,0 +1,39 @@
+!!!
+%html
+  %head
+    %meta{:content => "text/html; charset=UTF-8", "http-equiv" => "Content-Type"}/
+    %title= content_for(:title) || "Awesome Events"
+    %meta{:content => "width=device-width,initial-scale=1", :name => "viewport"}/
+    %meta{:content => "yes", :name => "apple-mobile-web-app-capable"}/
+    %meta{:content => "Awesome Events", :name => "application-name"}/
+    %meta{:content => "yes", :name => "mobile-web-app-capable"}/
+    = csrf_meta_tags
+    = csp_meta_tag
+    = yield :head
+    %link{:href => "/icon.png", :rel => "icon", :type => "image/png"}/
+    %link{:href => "/icon.svg", :rel => "icon", :type => "image/svg+xml"}/
+    %link{:href => "/icon.png", :rel => "apple-touch-icon"}/
+    = stylesheet_link_tag :app, "data-turbo-track": "reload"
+    = javascript_importmap_tags
+  %body
+    %header.navbar.navbar-expand-sm.navbar-light.bg-light
+      .container
+        = link_to "Awesome Events", root_path, class: "navbar-brand mr-auto"
+        %ul.navbar-nav
+          - if logged_in?
+            %li.nav-item
+              %form{action: "/logout", method: "post"}
+                = hidden_field_tag :_method, "delete"
+                = hidden_field_tag :authenticity_token, form_authenticity_token
+                %button.btn.btn-link.nav-link{type: "submit"} ログアウト
+          - else
+            %li.nav-item
+              %form{action: "/auth/github", method: "post"}
+                = hidden_field_tag :authenticity_token, form_authenticity_token
+                %button.btn.btn-link.nav-link{type: "submit"} Github でログイン
+    .container
+      - if flash.any?
+        - flash.each do |type, message|
+          .alert{class: "alert-#{type == 'notice' ? 'success' : 'danger'}", role: "alert"}
+            = message
+      = yield
