@@ -22,6 +22,8 @@
         %ul.navbar-nav
           - if logged_in?
             %li.nav-item
+              = link_to "イベントを作る", new_event_path, class: "nav-link"
+            %li.nav-item
               %form{action: "/logout", method: "post"}
                 = hidden_field_tag :_method, "delete"
                 = hidden_field_tag :authenticity_token, form_authenticity_token

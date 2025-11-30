@@ -1,0 +1,33 @@
+- now = Time.zone.now
+
+%h1 イベント作成
+
+- if @event.errors.any?
+  .alert.alert-danger
+    %h4= "#{@event.errors.count}件のエラーがあります"
+    %ul
+      - @event.errors.full_messages.each do |message|
+        %li= message
+
+= form_with(model: @event) do |f|
+  .form-group
+    = f.label :name, "イベント名"
+    = f.text_field :name, class: "form-control"
+
+  .form-group
+    = f.label :place, "場所"
+    = f.text_field :place, class: "form-control"
+
+  .form-group
+    = f.label :start_at, "開始時刻"
+    = f.datetime_select :start_at, default: now, class: "form-control"
+
+  .form-group
+    = f.label :end_at, "終了時刻"
+    = f.datetime_select :end_at, default: now + 1.hour, class: "form-control"
+
+  .form-group
+    = f.label :content, "イベント内容"
+    = f.text_area :content, class: "form-control", rows: 10
+
+  = f.submit "イベント作成", class: "btn btn-primary"
